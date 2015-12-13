@@ -1,4 +1,5 @@
 <?php
+ini_set("soap.wsdl_cache_enabled", "0");
 /**
  * This code is Jamhuri special and it enables you to access buygoods functionality
  * from any system build on top of php.
@@ -17,6 +18,41 @@ class MpesaApi
 		/*
 		Create A soap Message with parameters
 		 */
+		/*$params = array(
+			//'CheckOutHeader'=>array(
+				'MERCHANT_ID'=>$MERCHANT_ID,
+            	'PASSWORD'=>$password,
+            	'TIMESTAMP'=>$datetime,
+			//	),
+			//'processCheckOutRequest'=>array(
+	            'MERCHANT_TRANSACTION_ID'=>$MERCHANT_TRANSACTION_ID,
+	            'REFERENCE_ID'=>$REFERENCE_ID,
+	            'AMOUNT'=>$AMOUNT,
+	            'MSISDN'=>$MSISDN,
+	            'ENC_PARAMS'=>"CrazyL",
+	            'CALL_BACK_URL'=>$CALL_BACK_URL,
+	            'CALL_BACK_METHOD'=>"post",	            
+	            'TIMESTAMP'=>$datetime
+			//	)
+            
+            );
+		//print_r($params);*/
+		/*$soap = new SOAPClient(URL,array("trace"  => 0, "exceptions" => 0,
+			"stream_context" => stream_context_create(
+			        array(
+			            'ssl' => array(
+			                'verify_peer'       => false,
+			                'verify_peer_name'  => false,
+            		)
+       
+        			)
+    			),'location'=>'https://www.safaricom.co.ke/mpesa_online/lnmo_checkout_server.php'
+			));
+		echo $soap->processCheckOut($params);
+		
+
+		//print_r($soap->__call('processCheckOut',array($params));
+		exit;*/
 		$post_string='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="tns:ns">
 		<soapenv:Header>
 		  <tns:CheckOutHeader>
@@ -51,7 +87,8 @@ class MpesaApi
 		To get the feedback from the process request system
 		For debug purposes only
 		 */
-		echo "Request feedback: ".$response=$this->submitRequest($CALL_BACK_URL,$post_string,$headers);
+		$response=$this->submitRequest(URL,$post_string,$headers);
+		echo $response;
 		/*
 		To get the feedback from the process transaction system
 		For debug purposes only
