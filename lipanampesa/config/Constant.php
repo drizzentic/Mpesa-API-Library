@@ -11,7 +11,7 @@
 define("MERCHANT_ID",''); //Put the unique merchant ID provided by the client.
 define("PASSKEY", ''); //Put the passkey provided for SAG access
 define("URL", "https://www.safaricom.co.ke/mpesa_online/lnmo_checkout_server.php?wsdl"); //Put the api endpint.
-
+define('Cert_location','');
 /**
  * Function to generate the password
  * 

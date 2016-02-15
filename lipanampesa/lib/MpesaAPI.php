@@ -15,44 +15,7 @@ class MpesaApi
 	public function processCheckOutRequest($password,$MERCHANT_ID,$MERCHANT_TRANSACTION_ID,$REFERENCE_ID,$AMOUNT,$MSISDN,$CALL_BACK_URL){
 		$TIMESTAMP=new DateTime();
 		$datetime=$TIMESTAMP->format('YmdHis');
-		/*
-		Create A soap Message with parameters
-		 */
-		/*$params = array(
-			//'CheckOutHeader'=>array(
-				'MERCHANT_ID'=>$MERCHANT_ID,
-            	'PASSWORD'=>$password,
-            	'TIMESTAMP'=>$datetime,
-			//	),
-			//'processCheckOutRequest'=>array(
-	            'MERCHANT_TRANSACTION_ID'=>$MERCHANT_TRANSACTION_ID,
-	            'REFERENCE_ID'=>$REFERENCE_ID,
-	            'AMOUNT'=>$AMOUNT,
-	            'MSISDN'=>$MSISDN,
-	            'ENC_PARAMS'=>"CrazyL",
-	            'CALL_BACK_URL'=>$CALL_BACK_URL,
-	            'CALL_BACK_METHOD'=>"post",	            
-	            'TIMESTAMP'=>$datetime
-			//	)
-            
-            );
-		//print_r($params);*/
-		/*$soap = new SOAPClient(URL,array("trace"  => 0, "exceptions" => 0,
-			"stream_context" => stream_context_create(
-			        array(
-			            'ssl' => array(
-			                'verify_peer'       => false,
-			                'verify_peer_name'  => false,
-            		)
-       
-        			)
-    			),'location'=>'https://www.safaricom.co.ke/mpesa_online/lnmo_checkout_server.php'
-			));
-		echo $soap->processCheckOut($params);
 		
-
-		//print_r($soap->__call('processCheckOut',array($params));
-		exit;*/
 		$post_string='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="tns:ns">
 		<soapenv:Header>
 		  <tns:CheckOutHeader>
@@ -81,7 +44,7 @@ class MpesaApi
 		"Content-type: text/xml",
 		"Content-length: ".strlen($post_string),
 		"Content-transfer-encoding: text",
-		//"SOAPAction: \"processCheckOutRequest\"",
+		"SOAPAction: \"processCheckOutRequest\"",
 		);
 		/*
 		To get the feedback from the process request system
@@ -139,7 +102,7 @@ class MpesaApi
 		"Content-type: text/xml",
 		"Content-length: ".strlen($confirmTransactionResponse),
 		"Content-transfer-encoding: text",
-		//"SOAPAction: \"processCheckOutRequest\"",
+		"SOAPAction: \"transactionConfirmRequest\"",
 		);
 
 		return $this->submitRequest(URL,$confirmTransactionResponse,$headers);
@@ -156,9 +119,20 @@ class MpesaApi
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 		curl_setopt($ch, CURLOPT_POSTFIELDS,  $post_string); 
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		// curl_setopt($ch, CURLOPT_CAINFO, getcwd() . "/safcom");
+		//curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		//curl_setopt($ch, CURLOPT_CAINFO, getcwd() . ''); //Indicate the store of the certificate
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		/*
+		Consider this options to be able to authenticate with G2
+		// The --key option - If your key file has a password, you will need to set
+			CURLOPT_SSLKEYPASSWD
+			CURLOPT_SSLKEY
+			// The --cacert option
+			 CURLOPT_CAINFO
+			// The --cert option
+			CURLOPT_SSLCERT
+			CURLOPT_SSLCERTPASSWD
+		 */
 		$data = curl_exec($ch);
 		if($data === FALSE)
 		{
