@@ -8,8 +8,8 @@
 /**
  * Constants for authentication
  */
-define("MERCHANT_ID",''); //Put the unique merchant ID provided by the client.
-define("PASSKEY", ''); //Put the passkey provided for SAG access
+define("MERCHANT_ID",'338335'); //Put the unique merchant ID provided by the service provider.
+define("PASSKEY", '0147f4bb7a4d6804e62d1135b2427d09e83ed37f573cd004b3cbeddca51ba917'); //Put the passkey provided for SAG access
 define("URL", "https://www.safaricom.co.ke/mpesa_online/lnmo_checkout_server.php?wsdl"); //Put the api endpint.
 define('Cert_location','');
 /**

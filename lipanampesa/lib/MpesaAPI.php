@@ -109,6 +109,73 @@ class MpesaApi
 		
 	}
 
+	function registerUrl(){
+
+	$registerURLRequest='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:req="http://api-v1.gen.mm.vodafone.com/mminterface/request"> <soapenv:Header>
+					      <tns:RequestSOAPHeader xmlns:tns="http://www.huawei.com/schema/osg/common/v2_1">
+					         <tns:spId>151515</tns:spId>
+					         <tns:spPassword>ODExNERCMDlCNjVDRkYxQUFCNzE5MkE1OEQyMjJDMzk1RUFCNzgwMjk2ODE4Rjk1OTE2MEFGNDU1QkRCMDkyMg==</tns:spPassword>
+					         <tns:timeStamp>20140730093620</tns:timeStamp>
+					         <tns:serviceId>151515001</tns:serviceId>
+				      </tns:RequestSOAPHeader>
+			   </soapenv:Header>
+			   <soapenv:Body>
+			      <req:RequestMsg><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+			<request xmlns="http://api-v1.gen.mm.vodafone.com/mminterface/request">
+				    <Transaction>
+					        <CommandID>RegisterURL</CommandID>
+					        <OriginatorConversationID>Reg-266-1126</OriginatorConversationID>
+					        <Parameters>
+						            <Parameter>
+							                <Key>ResponseType</Key>
+							                <Value>Completed</Value>
+						            </Parameter>
+					        </Parameters>
+					        <ReferenceData>
+						           <ReferenceItem>
+							                <Key>ValidationURL</Key>
+							                <Value>http://10.66.49.201:8099/mock</Value>
+						            </ReferenceItem>
+						<ReferenceItem>
+							                <Key>ConfirmationURL</Key>
+							                <Value>http://10.66.49.201:8099/mock</Value>
+						            </ReferenceItem>
+			           
+					        </ReferenceData>
+				    </Transaction>
+				    <Identity>
+					        <Caller>
+						            <CallerType>0</CallerType>
+						            <ThirdPartyID/>
+						            <Password/>
+						            <CheckSum/>
+						<ResultURL/>
+					        </Caller>
+					        <Initiator>
+						            <IdentifierType>1</IdentifierType>
+						            <Identifier/>
+						            <SecurityCredential/>
+						            <ShortCode/>
+					        </Initiator>
+					        <PrimaryParty>
+						            <IdentifierType>1</IdentifierType>
+						            <Identifier/>
+						            <ShortCode>898942</ShortCode>
+					        </PrimaryParty>
+				    </Identity>
+				    <KeyOwner>1</KeyOwner>
+			</request>]]></req:RequestMsg>
+			   </soapenv:Body>
+			</soapenv:Envelope>';
+		$headers = array(  
+		"Content-type: text/xml",
+		"Content-length: ".strlen($registerURLRequest),
+		"Content-transfer-encoding: text",
+		"SOAPAction: \"GenericAPIRequest\"",
+		);
+
+		echo $this->submitRequest(URL,$registerURLRequest,$headers);
+	}
 	function submitRequest($url,$post_string,$headers){
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
