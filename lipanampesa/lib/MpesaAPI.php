@@ -31,7 +31,7 @@ class MpesaApi
 			<AMOUNT>'.$AMOUNT.'</AMOUNT>
 			<MSISDN>'.$MSISDN.'</MSISDN>
 			<!--Optional parameters-->
-			<CALL_BACK_URL>'.$CALL_BACK_URL.'</CALL_BACK_URL>
+			<CALL_BACK_URL>'.$CALL_BACK_URL.'/callback.php</CALL_BACK_URL>
 			<CALL_BACK_METHOD>xml</CALL_BACK_METHOD>
 			<TIMESTAMP>'.$datetime.'</TIMESTAMP>
 		  </tns:processCheckOutRequest>
@@ -105,77 +105,43 @@ class MpesaApi
 		"SOAPAction: \"transactionConfirmRequest\"",
 		);
 
-		return $this->submitRequest(URL,$confirmTransactionResponse,$headers);
+		//Do whatever you want with the data. You can as well pass it as Xml data
+		echo $this->submitRequest(URL,$confirmTransactionResponse,$headers);
 		
 	}
 
-	function registerUrl(){
+	public function statusRequest($Password,$MERCHANT_ID,$TXID,$MERCHANT_TRANSACTION_ID){
+		$TIMESTAMP=new DateTime();
+		$datetime=$TIMESTAMP->format('YmdHis');
 
-	$registerURLRequest='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:req="http://api-v1.gen.mm.vodafone.com/mminterface/request"> <soapenv:Header>
-					      <tns:RequestSOAPHeader xmlns:tns="http://www.huawei.com/schema/osg/common/v2_1">
-					         <tns:spId>151515</tns:spId>
-					         <tns:spPassword>ODExNERCMDlCNjVDRkYxQUFCNzE5MkE1OEQyMjJDMzk1RUFCNzgwMjk2ODE4Rjk1OTE2MEFGNDU1QkRCMDkyMg==</tns:spPassword>
-					         <tns:timeStamp>20140730093620</tns:timeStamp>
-					         <tns:serviceId>151515001</tns:serviceId>
-				      </tns:RequestSOAPHeader>
-			   </soapenv:Header>
-			   <soapenv:Body>
-			      <req:RequestMsg><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-			<request xmlns="http://api-v1.gen.mm.vodafone.com/mminterface/request">
-				    <Transaction>
-					        <CommandID>RegisterURL</CommandID>
-					        <OriginatorConversationID>Reg-266-1126</OriginatorConversationID>
-					        <Parameters>
-						            <Parameter>
-							                <Key>ResponseType</Key>
-							                <Value>Completed</Value>
-						            </Parameter>
-					        </Parameters>
-					        <ReferenceData>
-						           <ReferenceItem>
-							                <Key>ValidationURL</Key>
-							                <Value>http://10.66.49.201:8099/mock</Value>
-						            </ReferenceItem>
-						<ReferenceItem>
-							                <Key>ConfirmationURL</Key>
-							                <Value>http://10.66.49.201:8099/mock</Value>
-						            </ReferenceItem>
-			           
-					        </ReferenceData>
-				    </Transaction>
-				    <Identity>
-					        <Caller>
-						            <CallerType>0</CallerType>
-						            <ThirdPartyID/>
-						            <Password/>
-						            <CheckSum/>
-						<ResultURL/>
-					        </Caller>
-					        <Initiator>
-						            <IdentifierType>1</IdentifierType>
-						            <Identifier/>
-						            <SecurityCredential/>
-						            <ShortCode/>
-					        </Initiator>
-					        <PrimaryParty>
-						            <IdentifierType>1</IdentifierType>
-						            <Identifier/>
-						            <ShortCode>898942</ShortCode>
-					        </PrimaryParty>
-				    </Identity>
-				    <KeyOwner>1</KeyOwner>
-			</request>]]></req:RequestMsg>
-			   </soapenv:Body>
-			</soapenv:Envelope>';
+		$post_string='<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="tns:ns">
+					   <soapenv:Header>
+					      <tns:CheckOutHeader>
+					           <MERCHANT_ID>'.$MERCHANT_ID.'</MERCHANT_ID>
+						<PASSWORD>'.$Password.'</PASSWORD>
+						<TIMESTAMP>'.$datetime.'</TIMESTAMP>
+					      </tns:CheckOutHeader>
+					   </soapenv:Header>
+					   <soapenv:Body>
+					      <tns:transactionStatusRequest>
+					         <!--Optional:-->
+					         <TRX_ID>'.$TXID.'</TRX_ID>
+					         <!--Optional:-->
+					         <MERCHANT_TRANSACTION_ID>'.$MERCHANT_TRANSACTION_ID.'</MERCHANT_TRANSACTION_ID>
+					      </tns:transactionStatusRequest>
+					   </soapenv:Body>
+					</soapenv:Envelope>';
+
 		$headers = array(  
 		"Content-type: text/xml",
-		"Content-length: ".strlen($registerURLRequest),
+		"Content-length: ".strlen($post_string),
 		"Content-transfer-encoding: text",
-		"SOAPAction: \"GenericAPIRequest\"",
+		"SOAPAction: \"transactionStatusRequest\"",
 		);
 
-		echo $this->submitRequest(URL,$registerURLRequest,$headers);
+		echo $this->submitRequest(URL,$post_string,$headers);
 	}
+
 	function submitRequest($url,$post_string,$headers){
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
